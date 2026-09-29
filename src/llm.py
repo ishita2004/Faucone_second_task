@@ -6,20 +6,23 @@ class LLMClient:
     def __init__(self):
         self.gemini_key = config.GEMINI_API_KEY or os.getenv("GEMINI_API_KEY", "")
         self.openai_key = config.OPENAI_API_KEY or os.getenv("OPENAI_API_KEY", "")
-        self.provider = self._detect_provider()
-
-    def _detect_provider(self) -> str:
-        if self.gemini_key:
-            return "gemini"
-        elif self.openai_key:
-            return "openai"
-        return "offline_grounded"
 
     def generate_answer(self, prompt: str, retrieved_contexts: List[Dict[str, Any]]) -> str:
         """
-        Generates an answer based on prompt and retrieved contexts.
+        Generates an answer using Gemini API, OpenAI API, or clean grounded synthesis fallback.
         """
-        if self.provider == "gemini":
+        # Try Gemini API if key looks like a valid key
+        if self.gemini_key and len(self.gemini_key) > 20 and not self.gemini_key.startswith("AQ."):
+            try:
+                import google.generativeai as genai
+                genai.configure(api_key=self.gemini_key)
+                model = genai.GenerativeModel("gemini-1.5-flash")
+                response = model.generate_content(prompt)
+                if response and response.text:
+                    return response.text
+            except Exception as e:
+                print(f"Gemini API (google.generativeai) attempt failed: {e}")
+            
             try:
                 from google import genai
                 client = genai.Client(api_key=self.gemini_key)
@@ -27,11 +30,13 @@ class LLMClient:
                     model="gemini-2.5-flash",
                     contents=prompt
                 )
-                return response.text
+                if response and response.text:
+                    return response.text
             except Exception as e:
-                print(f"Gemini API call failed: {e}. Falling back to grounded synthesis.")
+                print(f"Gemini API (google.genai) attempt failed: {e}")
 
-        elif self.provider == "openai":
+        # Try OpenAI API if key exists
+        if self.openai_key and len(self.openai_key) > 20:
             try:
                 from openai import OpenAI
                 client = OpenAI(api_key=self.openai_key)
@@ -42,19 +47,20 @@ class LLMClient:
                         {"role": "user", "content": prompt}
                     ]
                 )
-                return response.choices[0].message.content
+                if response and response.choices:
+                    return response.choices[0].message.content
             except Exception as e:
-                print(f"OpenAI API call failed: {e}. Falling back to grounded synthesis.")
+                print(f"OpenAI API call failed: {e}")
 
-        # Offline Grounded Synthesis
-        return self._generate_offline_synthesis(retrieved_contexts)
+        # Fallback to high-quality local Grounded Answer Synthesizer
+        return self._generate_grounded_synthesis(retrieved_contexts)
 
-    def _generate_offline_synthesis(self, retrieved_contexts: List[Dict[str, Any]]) -> str:
+    def _generate_grounded_synthesis(self, retrieved_contexts: List[Dict[str, Any]]) -> str:
         if not retrieved_contexts:
             return "I don't know based on the provided documents."
 
-        citations = []
-        snippets = []
+        processed_paragraphs = []
+        citations_list = []
 
         for idx, item in enumerate(retrieved_contexts, start=1):
             doc = item.get("document", {})
@@ -63,14 +69,23 @@ class LLMClient:
             source = meta.get("source", "Unknown Document")
             page = meta.get("page", "?")
 
-            citations.append(f"[{idx}] {source} (Page {page})")
-            snippets.append(f"• From [{source}, Page {page}]: \"{text[:300]}...\"")
+            citations_list.append(f"[{idx}] {source} (Page {page})")
+            
+            # Format clean paragraph with full text (no snippet truncation!)
+            paragraph = (
+                f"### Section from [{source}, Page {page}]:\n"
+                f"{text}"
+            )
+            processed_paragraphs.append(paragraph)
 
-        summary_text = "\n\n".join(snippets)
-        citation_str = "\n".join(citations)
+        body_text = "\n\n".join(processed_paragraphs)
+        citations_text = " ".join([f"[{i+1}] {item['document']['metadata']['source']} (Page {item['document']['metadata']['page']})" for i, item in enumerate(retrieved_contexts)])
 
-        return (
-            f"Based on the retrieved document contexts, here is the relevant information:\n\n"
-            f"{summary_text}\n\n"
-            f"### Source Citations:\n{citation_str}"
+        answer_markdown = (
+            f"### Document Findings & Analysis\n\n"
+            f"{body_text}\n\n"
+            f"---\n"
+            f"**Source Citations:** {citations_text}"
         )
+
+        return answer_markdown

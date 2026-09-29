@@ -1,10 +1,21 @@
 import os
+import re
 from typing import List, Dict, Any
 from pypdf import PdfReader
 
 class PDFLoader:
     def __init__(self, pdf_dir: str):
         self.pdf_dir = pdf_dir
+
+    def _clean_text(self, text: str) -> str:
+        """Fixes hyphenated line breaks and normalizes whitespace."""
+        # Replace word-hyphen-newline-space (e.g., "organi- zational" -> "organizational")
+        text = re.sub(r'(\w+)-\s*\n\s*(\w+)', r'\1\2', text)
+        # Replace word-hyphen-space (e.g., "mag- nitude" -> "magnitude")
+        text = re.sub(r'(\w+)-\s+(\w+)', r'\1\2', text)
+        # Replace multiple spaces/newlines with single spaces
+        text = re.sub(r'\s+', ' ', text)
+        return text.strip()
 
     def load_documents(self) -> List[Dict[str, Any]]:
         documents = []
@@ -21,10 +32,10 @@ class PDFLoader:
                 num_pages = len(reader.pages)
                 for page_num, page in enumerate(reader.pages, start=1):
                     extracted_text = page.extract_text() or ""
-                    extracted_text = extracted_text.strip()
-                    if extracted_text:
+                    cleaned_text = self._clean_text(extracted_text)
+                    if cleaned_text:
                         documents.append({
-                            "text": extracted_text,
+                            "text": cleaned_text,
                             "metadata": {
                                 "source": pdf_file,
                                 "page": page_num,

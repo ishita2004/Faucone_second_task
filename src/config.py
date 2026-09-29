@@ -10,8 +10,8 @@ class Config:
     RAW_PDFS_DIR: str = os.getenv("RAW_PDFS_DIR", os.path.join(PROJECT_ROOT, "pdfs"))
     VECTOR_STORE_DIR: str = os.getenv("VECTOR_STORE_DIR", os.path.join(PROJECT_ROOT, "data", "vector_store"))
     
-    CHUNK_SIZE: int = int(os.getenv("CHUNK_SIZE", "500"))
-    CHUNK_OVERLAP: int = int(os.getenv("CHUNK_OVERLAP", "50"))
+    CHUNK_SIZE: int = int(os.getenv("CHUNK_SIZE", "1000"))
+    CHUNK_OVERLAP: int = int(os.getenv("CHUNK_OVERLAP", "100"))
     EMBEDDING_MODEL_NAME: str = os.getenv("EMBEDDING_MODEL_NAME", "all-MiniLM-L6-v2")
     TOP_K: int = int(os.getenv("TOP_K", "4"))
     
