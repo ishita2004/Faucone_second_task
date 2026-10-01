@@ -1,1 +1,1 @@
-"""RAG utilities for PDF Q&A."""
+# RAG Assistant Package

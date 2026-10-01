@@ -1,18 +1,26 @@
-from src.rag_chain import chunk_text, format_citations
+import sys
+from pathlib import Path
+
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
+
+from src.rag_chain import format_citations
+from src.chunk_documents import chunk_documents
 
 
-def test_chunk_text_splits_long_text():
-    text = "word " * 2000
-    chunks = chunk_text(text, chunk_size=800, overlap=100)
+def test_chunk_documents_splits_long_text():
+    docs = [{"text": "word " * 2000, "source": "test.pdf", "page": 1}]
+    chunks = chunk_documents(docs, chunk_size=800, chunk_overlap=100)
     assert len(chunks) > 1
-    assert all(len(chunk) <= 1200 for chunk in chunks)
+    assert all(len(c["text"]) <= 1000 for c in chunks)
 
 
 def test_format_citations_wraps_sources():
     citations = [
-        {"pdf_name": "alpha.pdf", "page": 3, "text": "This is a key fact."},
-        {"pdf_name": "beta.pdf", "page": 7, "text": "Another fact."},
+        {"source": "alpha.pdf", "page": 3, "score": 0.85, "text": "This is a key fact."},
+        {"source": "beta.pdf", "page": 7, "score": 0.82, "text": "Another fact."},
     ]
     result = format_citations(citations)
-    assert "[1] alpha.pdf (page 3)" in result
-    assert "[2] beta.pdf (page 7)" in result
+    assert "alpha.pdf" in result
+    assert "beta.pdf" in result

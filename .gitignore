@@ -1,9 +1,10 @@
 __pycache__/
-.pytest_cache/
-.venv/
+*.py[cod]
+*$py.class
 .env
-.streamlit/
-*.pyc
-*.pyo
-*.pyd
-.DS_Store
+.venv/
+env/
+venv/
+output/
+*.log
+.pytest_cache/

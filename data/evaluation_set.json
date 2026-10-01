@@ -1,0 +1,212 @@
+[
+  {
+    "id": 1,
+    "question": "What is the NIST AI Risk Management Framework 1.0?",
+    "expected_doc": "NIST_AI_RMF_1.0.pdf",
+    "expected_page": 1,
+    "type": "factual"
+  },
+  {
+    "id": 2,
+    "question": "How is risk defined in the NIST AI RMF framework?",
+    "expected_doc": "NIST_AI_RMF_1.0.pdf",
+    "expected_page": 9,
+    "type": "factual"
+  },
+  {
+    "id": 3,
+    "question": "What are the three categories of AI bias identified in NIST SP 1270?",
+    "expected_doc": "NIST_AI_Bias_SP1270.pdf",
+    "expected_page": 8,
+    "type": "factual"
+  },
+  {
+    "id": 4,
+    "question": "What is the role of governance in NIST AI RMF?",
+    "expected_doc": "NIST_AI_RMF_1.0.pdf",
+    "expected_page": 27,
+    "type": "complex"
+  },
+  {
+    "id": 5,
+    "question": "How does NIST SP 1270 describe human-cognitive bias in AI systems?",
+    "expected_doc": "NIST_AI_Bias_SP1270.pdf",
+    "expected_page": 8,
+    "type": "complex"
+  },
+  {
+    "id": 6,
+    "question": "What are embedded assessments for frontier AI systems?",
+    "expected_doc": "arxiv_12_Embedded Assessments for Frontier AI.pdf",
+    "expected_page": 1,
+    "type": "factual"
+  },
+  {
+    "id": 7,
+    "question": "What is indirect tipping in multi-agent AI populations?",
+    "expected_doc": "arxiv_13_Indirect tipping a social attack surface in AI age.pdf",
+    "expected_page": 1,
+    "type": "factual"
+  },
+  {
+    "id": 8,
+    "question": "What is the SocioVerse2 social simulation framework?",
+    "expected_doc": "arxiv_14_SocioVerse2 A Longitudinal Dynamic Social Simulati.pdf",
+    "expected_page": 1,
+    "type": "factual"
+  },
+  {
+    "id": 9,
+    "question": "How is quantitative legalese analysis performed for AI governance?",
+    "expected_doc": "arxiv_01_Decoding the Legalese A Scalable and Quantitative .pdf",
+    "expected_page": 1,
+    "type": "complex"
+  },
+  {
+    "id": 10,
+    "question": "What is the disciplinary language transfer problem in AI alignment?",
+    "expected_doc": "arxiv_02_The Disciplinary Language Transfer Problem How Psy.pdf",
+    "expected_page": 1,
+    "type": "complex"
+  },
+  {
+    "id": 11,
+    "question": "What are the ethical concerns of artificial intelligence in military operations?",
+    "expected_doc": "arxiv_03_The Ethics of Artificial Intelligence in Military .pdf",
+    "expected_page": 1,
+    "type": "factual"
+  },
+  {
+    "id": 12,
+    "question": "Why is behavioral evaluation not enough for social AI safety?",
+    "expected_doc": "arxiv_04_Behavior is Not Enough A Mechanism-Based Evaluatio.pdf",
+    "expected_page": 1,
+    "type": "complex"
+  },
+  {
+    "id": 13,
+    "question": "What is reciprocal collaboration in AI governance?",
+    "expected_doc": "arxiv_05_Reciprocal Collaboration how lessons from converge.pdf",
+    "expected_page": 1,
+    "type": "factual"
+  },
+  {
+    "id": 14,
+    "question": "How can large language models automate constructive assessment?",
+    "expected_doc": "arxiv_06_Automating Constructive Assessment with Large Lang.pdf",
+    "expected_page": 1,
+    "type": "complex"
+  },
+  {
+    "id": 15,
+    "question": "When do synthetic consumers fail to model human choice?",
+    "expected_doc": "arxiv_07_Seeing Is Not Perceiving When Synthetic Consumers .pdf",
+    "expected_page": 1,
+    "type": "complex"
+  },
+  {
+    "id": 16,
+    "question": "What happens when strike zone decisions become algorithmic?",
+    "expected_doc": "arxiv_08_When the Strike Zone Becomes Algorithmic Umpire Ju.pdf",
+    "expected_page": 1,
+    "type": "factual"
+  },
+  {
+    "id": 17,
+    "question": "What are the economic governance models for personalized AI?",
+    "expected_doc": "arxiv_09_Beyond Provenance The Economics and Governance of .pdf",
+    "expected_page": 1,
+    "type": "complex"
+  },
+  {
+    "id": 18,
+    "question": "What is Incipit axiom-grounded scaffolding for literary creation?",
+    "expected_doc": "arxiv_10_Incipit Axiom-Grounded Scaffolding for Human-AI Li.pdf",
+    "expected_page": 1,
+    "type": "factual"
+  },
+  {
+    "id": 19,
+    "question": "How is participatory speech dataset curation conducted?",
+    "expected_doc": "arxiv_11_Towards participatory speech dataset curation A qu.pdf",
+    "expected_page": 1,
+    "type": "complex"
+  },
+  {
+    "id": 20,
+    "question": "How do pattern recognizers evolve into personalized companions?",
+    "expected_doc": "arxiv_15_From Pattern Recognizers to Personalized Companion.pdf",
+    "expected_page": 1,
+    "type": "complex"
+  },
+  {
+    "id": 21,
+    "question": "What is the recipe for baking a pepperoni pizza?",
+    "expected_doc": null,
+    "expected_page": null,
+    "type": "out_of_scope"
+  },
+  {
+    "id": 22,
+    "question": "Who won the FIFA World Cup in 2022?",
+    "expected_doc": null,
+    "expected_page": null,
+    "type": "out_of_scope"
+  },
+  {
+    "id": 23,
+    "question": "How do you repair a Toyota Corolla engine?",
+    "expected_doc": null,
+    "expected_page": null,
+    "type": "out_of_scope"
+  },
+  {
+    "id": 24,
+    "question": "What is the chemical formula for photosynthesis?",
+    "expected_doc": null,
+    "expected_page": null,
+    "type": "out_of_scope"
+  },
+  {
+    "id": 25,
+    "question": "How do you write a C++ compiler from scratch?",
+    "expected_doc": null,
+    "expected_page": null,
+    "type": "out_of_scope"
+  },
+  {
+    "id": 26,
+    "question": "What is the capital city of France?",
+    "expected_doc": null,
+    "expected_page": null,
+    "type": "out_of_scope"
+  },
+  {
+    "id": 27,
+    "question": "How do you calculate compound interest in banking?",
+    "expected_doc": null,
+    "expected_page": null,
+    "type": "out_of_scope"
+  },
+  {
+    "id": 28,
+    "question": "What is the airspeed velocity of an unladen swallow?",
+    "expected_doc": null,
+    "expected_page": null,
+    "type": "out_of_scope"
+  },
+  {
+    "id": 29,
+    "question": "How do solar panels generate electricity?",
+    "expected_doc": null,
+    "expected_page": null,
+    "type": "out_of_scope"
+  },
+  {
+    "id": 30,
+    "question": "What is quantum entanglement in physics?",
+    "expected_doc": null,
+    "expected_page": null,
+    "type": "out_of_scope"
+  }
+]
