@@ -12,7 +12,7 @@ load_dotenv()
 class RAGChain:
     def __init__(self, api_key: str = None):
         self.api_key = api_key or os.getenv("GEMINI_API_KEY", "")
-        self.gemini = GeminiClient(self.api_key) if (self.api_key and len(self.api_key) > 20 and not self.api_key.startswith("AQ.")) else None
+        self.gemini = GeminiClient(self.api_key) if (self.api_key and len(self.api_key) > 10) else None
 
     def query(self, user_question: str, top_k: int = 5) -> Dict[str, Any]:
         """
