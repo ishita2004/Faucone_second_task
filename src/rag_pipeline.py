@@ -17,17 +17,21 @@ MODEL_NAME = "all-MiniLM-L6-v2"
 
 def load_rag_data():
     """
-    Load saved embeddings and document chunks.
+    Load saved embeddings and document chunks, auto-generating them if missing.
     """
+    if not EMBEDDINGS_FILE.exists() or not CHUNKS_FILE.exists():
+        print("Vector store not found. Auto-generating embeddings from pdfs folder...")
+        from src.run_pipeline import run_pipeline
+        run_pipeline()
 
     if not EMBEDDINGS_FILE.exists():
         raise FileNotFoundError(
-            f"Embeddings file not found: {EMBEDDINGS_FILE}"
+            f"Embeddings file not found: {EMBEDDINGS_FILE}. Please check pdfs folder."
         )
 
     if not CHUNKS_FILE.exists():
         raise FileNotFoundError(
-            f"Chunks file not found: {CHUNKS_FILE}"
+            f"Chunks file not found: {CHUNKS_FILE}. Please check pdfs folder."
         )
 
     embeddings = np.load(EMBEDDINGS_FILE)
