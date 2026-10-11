@@ -80,19 +80,23 @@ if st.button("Ask Question", use_container_width=True, type="primary"):
     else:
         try:
             with st.spinner("Searching PDF chunks and generating grounded answer..."):
-                answer, citations = answer_question(PDF_DIR, api_key, question, top_k=top_k)
+                answer, citations, latency = answer_question(PDF_DIR, api_key, question, top_k=top_k)
             st.session_state.history.append({
                 "question": question,
                 "answer": answer,
                 "citations": citations,
+                "latency": latency
             })
-            st.success("Answer generated successfully.")
+            st.success(f"Answer generated in {latency.get('total_sec', 0.0)}s (Retrieval: {latency.get('retrieval_sec', 0.0)}s)")
         except Exception as exc:
             st.error(f"RAG system error: {exc}")
 
 for item in reversed(st.session_state.history):
     st.markdown("---")
     st.markdown(f"**Question:** {item['question']}")
+    lat = item.get("latency", {})
+    if lat:
+        st.caption(f"⚡ Latency: {lat.get('total_sec', 0.0)}s | Retrieval: {lat.get('retrieval_sec', 0.0)}s | Generation: {lat.get('generation_sec', 0.0)}s")
     st.markdown(f"**Answer:**\n{item['answer']}")
     with st.expander("View Source Citations & Chunks"):
         st.text(format_citations(item["citations"]))

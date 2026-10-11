@@ -1,5 +1,6 @@
 import os
 import re
+import time
 from pathlib import Path
 from typing import Dict, Any, List, Tuple
 from src.rag_pipeline import retrieve_documents
@@ -21,13 +22,16 @@ class RAGChain:
             raise ValueError("Please enter a question.")
 
         # 1. Retrieve top-k chunks using Rohit's retrieval pipeline
+        t0 = time.perf_counter()
         retrieved_chunks = retrieve_documents(user_question, top_k=top_k)
+        retrieval_time = time.perf_counter() - t0
 
         if not retrieved_chunks:
             return {
                 "question": user_question,
                 "answer": "I don't know based on the provided documents.",
-                "citations": []
+                "citations": [],
+                "latency": {"retrieval_sec": round(retrieval_time, 4), "generation_sec": 0.0, "total_sec": round(retrieval_time, 4)}
             }
 
         # 2. Build context string & citations
@@ -53,6 +57,7 @@ class RAGChain:
         context_str = "\n\n---\n\n".join(context_parts)
 
         # 3. Generate Answer using Gemini API (or Grounded Fallback if no API key is provided)
+        t1 = time.perf_counter()
         if self.gemini:
             try:
                 answer = self.gemini.answer_with_context(user_question, context_str)
@@ -61,21 +66,28 @@ class RAGChain:
                 answer = self._grounded_fallback(context_parts)
         else:
             answer = self._grounded_fallback(context_parts)
+        generation_time = time.perf_counter() - t1
+        total_time = retrieval_time + generation_time
 
         return {
             "question": user_question,
             "answer": answer,
-            "citations": citations
+            "citations": citations,
+            "latency": {
+                "retrieval_sec": round(retrieval_time, 4),
+                "generation_sec": round(generation_time, 4),
+                "total_sec": round(total_time, 4)
+            }
         }
 
     def _grounded_fallback(self, context_parts: List[str]) -> str:
         body = "\n\n".join([f"• {c}" for c in context_parts])
         return f"Based on the retrieved document contexts, here is the relevant information:\n\n{body}"
 
-def answer_question(pdf_dir: Any, api_key: str, question: str, top_k: int = 5) -> Tuple[str, List[Dict[str, Any]]]:
+def answer_question(pdf_dir: Any, api_key: str, question: str, top_k: int = 5) -> Tuple[str, List[Dict[str, Any]], Dict[str, float]]:
     chain = RAGChain(api_key=api_key)
     res = chain.query(question, top_k=top_k)
-    return res["answer"], res["citations"]
+    return res["answer"], res["citations"], res.get("latency", {})
 
 def format_citations(citations: List[Dict[str, Any]]) -> str:
     if not citations:
