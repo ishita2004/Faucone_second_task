@@ -26,10 +26,11 @@ class RAGChain:
         retrieved_chunks = retrieve_documents(user_question, top_k=top_k)
         retrieval_time = time.perf_counter() - t0
 
-        if not retrieved_chunks:
+        top_score = retrieved_chunks[0].get("score", 0.0) if retrieved_chunks else 0.0
+        if not retrieved_chunks or top_score < 0.43:
             return {
                 "question": user_question,
-                "answer": "I don't know based on the provided documents.",
+                "answer": "I don't know based on the provided documents. (This question appears to be out-of-scope for the indexed PDF collection).",
                 "citations": [],
                 "latency": {"retrieval_sec": round(retrieval_time, 4), "generation_sec": 0.0, "total_sec": round(retrieval_time, 4)}
             }
